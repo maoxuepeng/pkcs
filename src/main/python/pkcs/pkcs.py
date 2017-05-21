@@ -131,7 +131,7 @@ class Cert(object):
         self.parser.add_argument('-l', '--locality', dest='l', default='ShenZhen', help="locality name in subject")
         self.parser.add_argument('-o', '--organization', dest='o', default='YunWeiPai', help="organization name in subject")
         self.parser.add_argument('-ou', '--organization-unit', dest='ou', default='YunWeiPai', help="organization unit name in subject")
-        self.parser.add_argument('-cn', '--common-name', dest='cn', default='YunWeiPai-CA', help="common name in subject")
+        self.parser.add_argument('-cn', '--common-name', dest='cn', default='YunWeiPai', help="common name in subject")
         self.args = None
 
     def parse(self):
@@ -244,7 +244,6 @@ def main():
     cmd = None
     if subCommand == "ca":
         cmd = CA(sys.argv[2:])
-        print sys.argv[2:]
     elif subCommand == "cert":
         cmd = Cert(sys.argv[2:])
     else:
