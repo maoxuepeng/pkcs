@@ -50,7 +50,7 @@ optional arguments:
 ```
 usage: pkcs cert [-h] [-ca-key CAKEY] [-ca-cert CACERT] [-ca-conf CACONF]
                  [-cert-out CERTOUT] [-len LEN] [-c C] [-st ST] [-l L] [-o O]
-                 [-ou OU] [-cn CN]
+                 [-ou OU] [-cn CN] [-subj-alt-name SUBJECTALTNAME]
 
 pkcs tool set
 
@@ -75,6 +75,8 @@ optional arguments:
                         organization unit name in subject
   -cn CN, --common-name CN
                         common name in subject
+  -subj-alt-name SUBJECTALTNAME, --subject-alt-name SUBJECTALTNAME
+                        subject alternative name in x509 extension
 ```
 
 - -ca-key: CA私钥绝对路径，必选
@@ -88,3 +90,4 @@ optional arguments:
 - -o: X509 规范中的证书主体所属组织名称，默认为 YunWeiPai，可选；必须与CA的值保持一致
 - -ou: X509 规范中的主体所属组织单元（部门）名称，默认为 YunWeiPai，可选
 - -cn: X509 规范中的主体名称，默认为 YunWeiPai，可选
+- -subj-alt-name X509 规范中扩展的subjectAltName属性，输入格式为: `DNS:*.yunweipai.com,IP:192.168.1.12`，DNS: 标识域名；IP: 标识IP地址；多个值使用逗号分隔
