@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="pkcs",
-    version="0.1",
+    version="0.1.1",
     keywords=("pip", "python", "pkcs", "openssl", "x509", "certificate", "ca", "self sign"),
     description="pkcs tool set",
     long_description="pkcs tool set for manipulating pkcs file",

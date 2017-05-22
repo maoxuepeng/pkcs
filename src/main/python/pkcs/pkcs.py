@@ -132,6 +132,7 @@ class Cert(object):
         self.parser.add_argument('-o', '--organization', dest='o', default='YunWeiPai', help="organization name in subject")
         self.parser.add_argument('-ou', '--organization-unit', dest='ou', default='YunWeiPai', help="organization unit name in subject")
         self.parser.add_argument('-cn', '--common-name', dest='cn', default='YunWeiPai', help="common name in subject")
+        self.parser.add_argument('-subj-alt-name', '--subject-alt-name', dest='subjectAltName', default='*.yunweipai.com', help="subject alternative name in x509 extension")
         self.args = None
 
     def parse(self):
@@ -148,14 +149,14 @@ class Cert(object):
         self.o = self.args.o
         self.ou = self.args.ou
         self.cn = self.args.cn
+        self.subjectAltName = self.args.subjectAltName
         self.subject = "/C=%(c)s/ST=%(st)s/L=%(l)s/O=%(o)s/OU=%(ou)s/CN=%(cn)s" % {
             "c": self.c,
             "st": self.st,
             "l": self.l,
             "o": self.o,
             "ou": self.ou,
-            "cn": self.cn,
-            'subjectAltName': self.cn
+            "cn": self.cn
         }
 
         if self.cakey is None or self.cacert is None or self.caconf is None:
@@ -206,8 +207,10 @@ class Cert(object):
             'certout': self.certout,
             'cn': self.cn
         }
+        env = dict(os.environ)
+        env['SUBJECT_ALT_NAME'] = self.subjectAltName
         logging.info('generate certificate by command: %s', cmd)
-        p = subprocess.Popen(cmd, shell=True)
+        p = subprocess.Popen(cmd, shell=True, env=env)
         p.wait()
         if p.returncode != 0:
             logging.error('generate certificate failure')
@@ -227,7 +230,7 @@ class Cert(object):
             "o": self.o,
             "ou": self.ou,
             "cn": self.cn,
-            'subjectAltName': self.cn
+            'subjectAltName': self.subjectAltName
         }
         confFile = os.path.join(self.certout, 'openssl.conf')
         with open(confFile, 'w+') as fp:

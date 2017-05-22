@@ -77,6 +77,7 @@ CN = %(cn)s
 basicConstraints = CA:false
 subjectKeyIdentifier = hash
 authorityKeyIdentifier = keyid,issuer
+subjectAltName = $ENV::SUBJECT_ALT_NAME
 
 [ v3_req ]
 #subjectAltName = %(subjectAltName)s
@@ -125,7 +126,7 @@ default_bits            = 4096
 default_keyfile         = privkey.pem
 distinguished_name      = req_distinguished_name
 attributes              = req_attributes
-x509_extensions     = v3_ca
+x509_extensions     = v3_req
 req_extensions      = v3_req
 
 string_mask = nombstr
@@ -147,10 +148,6 @@ subjectKeyIdentifier = hash
 authorityKeyIdentifier = keyid,issuer
 
 [ v3_req ]
-#subjectAltName = %(subjectAltName)s
+subjectAltName = %(subjectAltName)s
 
-[ v3_ca ]
-subjectKeyIdentifier=hash
-authorityKeyIdentifier=keyid:always,issuer:always
-basicConstraints = CA:true
 '''
