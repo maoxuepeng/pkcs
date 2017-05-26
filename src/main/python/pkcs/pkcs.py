@@ -32,6 +32,7 @@ class CA(object):
         self.parser.add_argument('-o', '--organization', dest='o', default='YunWeiPai', help="organization name in subject")
         self.parser.add_argument('-ou', '--organization-unit', dest='ou', default='YunWeiPai', help="organization unit name in subject")
         self.parser.add_argument('-cn', '--common-name', dest='cn', default='YunWeiPai-CA', help="common name in subject")
+        self.parser.add_argument('-subj-alt-name', '--subject-alt-name', dest='subjectAltName', default='DNS:*.yunweipai.com', help="subject alt name in subject")
         self.args = None
 
     def parse(self):
@@ -44,6 +45,7 @@ class CA(object):
         self.o = self.args.o
         self.ou = self.args.ou
         self.cn = self.args.cn
+        self.subjectAltName = self.args.subjectAltName
         self.subject = "/C=%(c)s/ST=%(st)s/L=%(l)s/O=%(o)s/OU=%(ou)s/CN=%(cn)s" % {
             "c": self.c,
             "st": self.st,
@@ -79,9 +81,12 @@ class CA(object):
             logging.error("generate ca key failure")
             return p.returncode
 
+        env = dict(os.environ)
+        env['SUBJECT_ALT_NAME'] = self.subjectAltName
+            
         cmd = GEN_CA_REQ % {'caroot': self.caroot, 'subj': self.subject, "cn": self.cn}
         logging.info('generate ca certificate request by command: %s', cmd)
-        p = subprocess.Popen(cmd, shell=True)
+        p = subprocess.Popen(cmd, shell=True, env=env)
         p.wait()
         if p.returncode != 0:
             logging.error("generate ca certificate request failure")
@@ -89,7 +94,7 @@ class CA(object):
         
         cmd = GEN_CA_CERT % {'caroot': self.caroot, "cn": self.cn}
         logging.info('generate ca certificate by command: %s', cmd)
-        p = subprocess.Popen(cmd, shell=True)
+        p = subprocess.Popen(cmd, shell=True, env=env)
         p.wait()
         if p.returncode != 0:
             logging.error("generate ca certificate failure")
@@ -108,7 +113,8 @@ class CA(object):
             "o": self.o,
             "ou": self.ou,
             "cn": self.cn,
-            "caroot": self.caroot
+            "caroot": self.caroot,
+            "subjectAltName": self.cn
         }
         confFile = os.path.join(self.caroot, 'openssl.conf')
         with open(confFile, 'w+') as fp:
