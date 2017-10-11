@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# trigger docker build
 i=0
 while [ 1 ];
 do
